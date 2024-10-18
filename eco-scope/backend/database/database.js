@@ -1,3 +1,5 @@
+// database/database.js
+
 const sqlite3 = require('sqlite3').verbose();
 
 // Connect to SQLite database
@@ -9,12 +11,14 @@ const db = new sqlite3.Database('./data.db', (err) => {
     }
 });
 
-// Create a table for storing company details
-db.run(`CREATE TABLE IF NOT EXISTS companies (
+// Create a table for storing user details
+db.run(`CREATE TABLE IF NOT EXISTS users (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
-    company_name TEXT,
-    project_details TEXT
+    first_name TEXT,
+    last_name TEXT,
+    email TEXT UNIQUE,
+    password TEXT,
+    company_name TEXT
 )`);
 
-// Export the db object using CommonJS syntax
 module.exports = db;

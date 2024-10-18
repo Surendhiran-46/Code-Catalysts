@@ -1,3 +1,5 @@
+// server.js
+
 const express = require('express');
 const cors = require('cors');
 const bodyParser = require('body-parser');
@@ -7,14 +9,14 @@ const app = express();
 app.use(cors());
 app.use(bodyParser.json());
 
-// Route to handle form submission
+// Route to handle user registration
 app.post('/api/register', (req, res) => {
-  const { name, email, password, companyName, companyDetails } = req.body;
+  const { firstName, lastName, email, password, companyName } = req.body;
 
-  const query = `INSERT INTO users (name, email, password, companyName, companyDetails) 
+  const query = `INSERT INTO users (first_name, last_name, email, password, company_name) 
                  VALUES (?, ?, ?, ?, ?)`;
 
-  db.run(query, [name, email, password, companyName, companyDetails], function (err) {
+  db.run(query, [firstName, lastName, email, password, companyName], function (err) {
     if (err) {
       console.error(err.message);
       return res.status(500).json({ error: err.message });
@@ -23,13 +25,20 @@ app.post('/api/register', (req, res) => {
   });
 });
 
-// Route to fetch user data
-app.get('/api/users', (req, res) => {
-  db.all(`SELECT * FROM users`, [], (err, rows) => {
+// Route to handle user login
+app.post('/api/login', (req, res) => {
+  const { email, password } = req.body;
+
+  const query = `SELECT * FROM users WHERE email = ? AND password = ?`;
+  
+  db.get(query, [email, password], (err, row) => {
     if (err) {
       return res.status(500).json({ error: err.message });
     }
-    res.json({ users: rows });
+    if (!row) {
+      return res.status(401).json({ error: 'Incorrect Username or Password' });
+    }
+    res.json({ message: 'Login successful!', userId: row.id });
   });
 });
 

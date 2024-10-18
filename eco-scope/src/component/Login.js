@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { TextField, Button, Box, Typography, Divider, InputAdornment, IconButton } from '@mui/material';
+import axios from 'axios';
 import GoogleIcon from '@mui/icons-material/Google';
 import Visibility from '@mui/icons-material/Visibility';
 import VisibilityOff from '@mui/icons-material/VisibilityOff';
@@ -14,18 +15,29 @@ function Login() {
   const navigate = useNavigate(); // useNavigate hook for navigation
 
   // Function to handle form submission
-  const handleSubmit = () => {
-    if (!email || !password) {
+  // login.js (Updated handleSubmit method)
+const handleSubmit = async () => {
+  if (!email || !password) {
       setError('Both username and password are required.');
-    } else {
-      setError('');
-      // Simulate login logic (e.g., API call)
-      console.log('Logging in with:', { email, password });
+      return;
+  }
+  try {
+      const response = await axios.post('http://localhost:5000/api/login', {
+          email,
+          password,
+      });
+      console.log('Login successful:', response.data);
+      navigate('/');  // Redirect to the home page on successful login
+  } catch (error) {
+      console.error('Login failed:', error);
+      if (error.response && error.response.status === 401) {
+          setError('Incorrect Username or Password. Please try again.');
+      } else {
+          setError('An error occurred. Please try again later.');
+      }
+  }
+};
 
-      // Redirect to Home page after successful login
-      navigate('/');
-    }
-  };
 
   // Function to handle Google login
   const handleGoogleLogin = () => {

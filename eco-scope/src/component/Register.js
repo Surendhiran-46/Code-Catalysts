@@ -47,25 +47,33 @@ function Register() {
     return newErrors;
   };
 
-  const handleSubmit = async () => {
-    const formErrors = validateForm();
-    if (Object.keys(formErrors).length > 0) {
+  // register.js (Updated handleSubmit method)
+const handleSubmit = async () => {
+  const formErrors = validateForm();
+  if (Object.keys(formErrors).length > 0) {
       setErrors(formErrors);
       return;
-    }
-    if (userType) {
+  }
+  if (userType) {
       try {
-        const response = await axios.post('http://localhost:5000/api/register', formData);
-        console.log('Form submitted:', response.data);
-        navigate('/');  // Redirect to the home page
+          const response = await axios.post('http://localhost:5000/api/register', {
+              firstName: formData.firstName,
+              lastName: formData.lastName,
+              email: formData.email,
+              password: formData.password,
+              companyName: formData.companyName,
+          });
+          console.log('Form submitted:', response.data);
+          navigate('/');  // Redirect to the home page
       } catch (error) {
-        console.error('Error submitting form:', error);
-        setSubmitError('Failed to register. Please try again.');
+          console.error('Error submitting form:', error);
+          setSubmitError('Failed to register.Email already exists');
       }
-    } else {
+  } else {
       setSubmitError('Please select a user type.');
-    }
-  };
+  }
+};
+
 
   const handleGoogleSignUp = () => {
     console.log('Google sign up clicked');
