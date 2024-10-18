@@ -1,84 +1,69 @@
 import React from 'react';
-import { Button, Typography, Box } from '@mui/material';
-import { Link } from 'react-router-dom'; // Assuming you're using React Router
+import { AppBar, Toolbar, Button, Typography, Box } from '@mui/material';
+import { Link } from 'react-router-dom';
+import { keyframes } from '@mui/system'; // Import keyframes for animation
+import ecoscopeLogo from '../assests/ecoscope.png'; // Import the logo image
+
+// Define the background gradient animation with green shades
+const gradientAnimation = keyframes`
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+`;
 
 function Home() {
   return (
     <Box
-      display="flex"
-      flexDirection="column"
-      alignItems="center"
-      justifyContent="center"
-      minHeight="100vh"
-      bgcolor="#f5f5f5"
-      textAlign="center"
+      sx={{
+        background: 'linear-gradient(135deg, #66ff66, #009900)', // Green gradient colors
+        height: '100vh',
+        animation: `${gradientAnimation} 10s ease infinite`, // Apply animation
+        backgroundSize: '400% 400%',
+      }}
     >
-      {/* Welcome Message */}
-      <Typography variant="h3" gutterBottom>
-        Environmental Impact Assessment Platform
-      </Typography>
+      {/* Navbar */}
+      <AppBar position="static" sx={{ backgroundColor: '#808080', boxShadow: 'none' }}> {/* Grey navbar */}
+        <Toolbar sx={{ justifyContent: 'space-between' }}> {/* Align the navbar */}
+          {/* Logo Image */}
+          <Box sx={{ flexGrow: 1, textAlign: 'left' }}>
+            <img src={ecoscopeLogo} alt="EcoScope Logo" height="50" /> {/* Logo height can be adjusted */}
+          </Box>
 
-      <Typography variant="h6" color="textSecondary" gutterBottom>
-        Aligning Corporate Sustainability Initiatives
-      </Typography>
+          {/* Navbar Links */}
+          <Box>
+            <Button color="inherit" component={Link} to="/login">
+              Login
+            </Button>
+            <Button color="inherit" component={Link} to="/register">
+              Register
+            </Button>
+          </Box>
+        </Toolbar>
+      </AppBar>
 
-      {/* Description */}
-      <Typography variant="body1" color="textSecondary" paragraph>
-        Track your organization’s environmental footprint and ensure alignment with your sustainability goals.
-      </Typography>
-
-      {/* User Registration and Authentication */}
-      <Box marginY={2}>
-        <Typography variant="h6">User Registration and Authentication</Typography>
-        <Typography variant="body2" color="textSecondary" gutterBottom>
-          Create an account to start tracking your environmental data and manage your corporate sustainability initiatives.
+      {/* Main Content */}
+      <Box
+        display="flex"
+        flexDirection="column"
+        alignItems="center"
+        justifyContent="center"
+        minHeight="100vh"
+        textAlign="center"
+        color="white"
+      >
+        {/* Welcome Message */}
+        <Typography variant="h3" gutterBottom>
+          Environmental Impact Assessment Platform
         </Typography>
-        <Button
-          variant="contained"
-          color="primary"
-          component={Link} to="/login"
-          sx={{ margin: 1 }}
-        >
-          Login
-        </Button>
-        <Button
-          variant="outlined"
-          color="secondary"
-          component={Link} to="/register"
-          sx={{ margin: 1 }}
-        >
-          Register
-        </Button>
-      </Box>
 
-      {/* Data Entry and Tracking */}
-      <Box marginY={2}>
-        <Typography variant="h6">Data Entry and Tracking</Typography>
-        <Typography variant="body2" color="textSecondary" gutterBottom>
-          Enter your environmental footprint data such as energy usage, water consumption, and carbon emissions to track your progress over time.
+        <Typography variant="h6" color="lightgrey" gutterBottom>
+          Aligning Corporate Sustainability Initiatives
         </Typography>
-        <Button
-          variant="contained"
-          color="success"
-          component={Link} to="/data-entry"
-        >
-          Start Data Entry
-        </Button>
-      </Box>
 
-      {/* Admin Access */}
-      <Box marginY={2}>
-        <Typography variant="h6">Admin Access</Typography>
-        <Typography variant="body2" color="textSecondary" gutterBottom>
-          Admins can manage user access and privileges to ensure secure access to sensitive data.
+        {/* Description */}
+        <Typography variant="body1" color="lightgrey" paragraph>
+          Track your organization’s environmental footprint and ensure alignment with your sustainability goals.
         </Typography>
-        <Button
-          variant="contained"
-          color="warning"
-          component={Link} to="/admin"
-        >
-          Admin Dashboard
-        </Button>
       </Box>
     </Box>
   );
