@@ -2,7 +2,8 @@ import React from 'react';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import Home from './component/Home';
 import Login from './component/Login';
-import Register from './component/Register'; // Import the Register component
+import Register from './component/Register';
+import DataEntry from './component/DataEntry'; // Import the DataEntry component
 
 function App() {
   return (
@@ -16,6 +17,9 @@ function App() {
         
         {/* Register Route */}
         <Route path="/register" element={<Register />} />
+        
+        {/* Data Entry Route */}
+        <Route path="/data-entry" element={<DataEntry />} /> {/* Add the DataEntry route */}
       </Routes>
     </Router>
   );
