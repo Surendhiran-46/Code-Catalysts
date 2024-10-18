@@ -1,168 +1,92 @@
 import React, { useState } from 'react';
-import { TextField, Button, Box, Typography, Divider, InputAdornment, IconButton } from '@mui/material';
+import { TextField, Button, Box, Typography, Divider, InputAdornment, IconButton, Alert } from '@mui/material';
 import axios from 'axios';
 import GoogleIcon from '@mui/icons-material/Google';
 import Visibility from '@mui/icons-material/Visibility';
 import VisibilityOff from '@mui/icons-material/VisibilityOff';
-import { useNavigate } from 'react-router-dom'; // Import useNavigate
+import { useNavigate } from 'react-router-dom';
 
 function Login() {
-  const [showPassword, setShowPassword] = useState(false); // State to toggle password visibility
-  const [email, setEmail] = useState(''); // State for email
-  const [password, setPassword] = useState(''); // State for password
-  const [error, setError] = useState(''); // Error state for form validation
+  const [showPassword, setShowPassword] = useState(false);
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [error, setError] = useState('');
 
-  const navigate = useNavigate(); // useNavigate hook for navigation
+  const navigate = useNavigate();
 
-  // Function to handle form submission
-  // login.js (Updated handleSubmit method)
-const handleSubmit = async () => {
-  if (!email || !password) {
-      setError('Both username and password are required.');
-      return;
-  }
-  try {
-      const response = await axios.post('http://localhost:5000/api/login', {
-          email,
-          password,
-      });
-      console.log('Login successful:', response.data);
-      navigate('/');  // Redirect to the home page on successful login
-  } catch (error) {
-      console.error('Login failed:', error);
-      if (error.response && error.response.status === 401) {
-          setError('Incorrect Username or Password. Please try again.');
-      } else {
-          setError('An error occurred. Please try again later.');
-      }
-  }
-};
+  const handleSubmit = async () => {
+    if (!email || !password) {
+        setError('Both username and password are required.');
+        return;
+    }
+    try {
+        const response = await axios.post('http://localhost:5000/api/login', {
+            email,
+            password
+        });
+        console.log('Logged in:', response.data);
+        navigate('/'); // Redirect to the home page or dashboard
+    } catch (error) {
+        console.error('Login failed:', error);
+        setError('Invalid email or password.');
+    }
+  };
 
-
-  // Function to handle Google login
-  const handleGoogleLogin = () => {
-    // Simulate Google login logic
-    console.log('Logging in with Google');
-
-    // Redirect to Home page after successful Google login
-    navigate('/');
+  const togglePasswordVisibility = () => {
+    setShowPassword(prev => !prev);
   };
 
   return (
-    <Box
-      display="flex"
-      justifyContent="center"
-      alignItems="center"
-      height="100vh"
-      bgcolor="#f5f5f5"
-    >
-      <Box
-        sx={{
-          width: 400,
-          padding: 4,
-          backgroundColor: 'white',
-          borderRadius: 2,
-          boxShadow: '0 3px 10px rgba(0,0,0,0.2)',
-        }}
-      >
-        <Typography variant="h5" align="center" gutterBottom>
-          Welcome Back!
-        </Typography>
+    <Box display="flex" justifyContent="center" alignItems="center" sx={{ minHeight: '100vh' }}>
+      <Box sx={{ width: '400px', padding: '20px', borderRadius: '10px', boxShadow: '0 0 10px rgba(0,0,0,0.1)', backgroundColor: '#fff' }}>
+        <Typography variant="h4" textAlign="center" mb={2}>Login</Typography>
 
-        {/* Username input */}
+        {error && <Alert severity="error">{error}</Alert>}
+
         <TextField
-          fullWidth
-          label="Username"
-          variant="outlined"
-          margin="normal"
-          type="email"
+          label="Email"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
-          required
-          error={!!error && !email}
-          helperText={!!error && !email ? 'Username is required' : ''}
-          InputLabelProps={{
-            required: false, // Prevents the '*' from showing
-            shrink: true, // Ensures that the label doesn't collapse
-            style: { fontWeight: 'normal' },
-          }}
+          fullWidth
+          sx={{ mb: 2 }}
         />
 
-        {/* Password input */}
         <TextField
-          fullWidth
           label="Password"
-          variant="outlined"
-          margin="normal"
           type={showPassword ? 'text' : 'password'}
           value={password}
           onChange={(e) => setPassword(e.target.value)}
-          required
-          error={!!error && !password}
-          helperText={!!error && !password ? 'Password is required' : ''}
-          InputLabelProps={{
-            required: false, // Prevents the '*' from showing
-            shrink: true, // Ensures that the label doesn't collapse
-            style: { fontWeight: 'normal' },
-          }}
+          fullWidth
+          sx={{ mb: 2 }}
           InputProps={{
             endAdornment: (
               <InputAdornment position="end">
-                <IconButton
-                  onClick={() => setShowPassword(!showPassword)}
-                  edge="end"
-                >
+                <IconButton onClick={togglePasswordVisibility} edge="end">
                   {showPassword ? <VisibilityOff /> : <Visibility />}
                 </IconButton>
               </InputAdornment>
-            ),
+            )
           }}
         />
 
-        {/* Forgot Password link moved to the right */}
-        <Typography
-          align="right"
-          color="primary"
-          variant="body2"
-          sx={{ marginTop: 1, cursor: 'pointer', marginRight: 1 }}
-        >
-          Forgot Password?
-        </Typography>
-
-        {/* Error message */}
-        {error && (
-          <Typography color="error" align="center" variant="body2" sx={{ marginTop: 1 }}>
-            {error}
-          </Typography>
-        )}
-
-        {/* Login button */}
         <Button
           variant="contained"
-          fullWidth
-          color="success"
-          sx={{ marginTop: 2 }}
           onClick={handleSubmit}
+          fullWidth
+          sx={{ mb: 2 }}
         >
-          Log In
+          Login
         </Button>
 
-        {/* Divider */}
-        <Divider sx={{ marginY: 2 }} />
+        <Divider sx={{ width: '100%', my: 3 }} />
 
-        <Typography align="center" variant="body2">
-          OR
-        </Typography>
-
-        {/* Google Login Button */}
         <Button
           variant="outlined"
+          startIcon={<GoogleIcon />}
           fullWidth
-          startIcon={<GoogleIcon />} // Material UI Google icon
-          sx={{ marginTop: 2 }}
-          onClick={handleGoogleLogin}  // Handle Google login
+          sx={{ color: 'green', borderColor: 'green', '&:hover': { borderColor: 'darkgreen' } }}
         >
-          Log in with Google
+          Login with Google
         </Button>
       </Box>
     </Box>

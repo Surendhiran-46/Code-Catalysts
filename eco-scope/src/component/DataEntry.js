@@ -1,6 +1,8 @@
+// DataEntry.js
 import React, { useState } from 'react';
 import { Box, Typography, TextField, Button, Grid, Paper } from '@mui/material';
 import forestsImage from '../assests/forests.jpg';  // Importing image from assets folder
+import axios from 'axios';  // Import axios for making HTTP requests
 
 function DataEntry() {
   const [data, setData] = useState({
@@ -11,17 +13,24 @@ function DataEntry() {
     wasteGenerated: '',
   });
 
-  // Handle form data change
   const handleChange = (e) => {
     const { name, value } = e.target;
     setData({ ...data, [name]: value });
   };
 
-  // Handle form submission
   const handleSubmit = (e) => {
     e.preventDefault();
-    // Here you can send the data to your API or backend
-    console.log('Form Data Submitted: ', data);
+
+    // Send the environmental data to the server
+    axios.post('http://localhost:5000/api/environmental-data', data)
+      .then(response => {
+        console.log('Data stored successfully:', response.data);
+        // You can reset the form or show a success message here
+      })
+      .catch(error => {
+        console.error('Error storing data:', error);
+        // Handle error here
+      });
   };
 
   return (
@@ -29,8 +38,8 @@ function DataEntry() {
       sx={{
         padding: 4,
         minHeight: '100vh',
-        backgroundColor: '#f5f5f5',  // Light background color
-        backgroundImage: `url(${forestsImage})`,  // Adding the background image
+        backgroundColor: '#f5f5f5',  
+        backgroundImage: `url(${forestsImage})`,  
         backgroundSize: 'cover',
         backgroundPosition: 'center',
       }}
@@ -40,8 +49,8 @@ function DataEntry() {
           padding: 4,
           maxWidth: '600px',
           margin: '0 auto',
-          backgroundColor: '#ffffff',  // White background for the form container
-          boxShadow: 3,  // Subtle shadow for the form
+          backgroundColor: '#ffffff',
+          boxShadow: 3,
         }}
       >
         <Typography variant="h3" gutterBottom sx={{ fontWeight: 'bold', color: 'black', marginBottom: 4 }}>
@@ -60,8 +69,8 @@ function DataEntry() {
                 onChange={handleChange}
                 required
                 InputLabelProps={{
-                  shrink: true,  // Keeps the label inside the text field
-                  required: false,  // Prevents the asterisk (*) from appearing next to the label
+                  shrink: true,  
+                  required: false,  
                 }}
               />
             </Grid>
@@ -75,8 +84,8 @@ function DataEntry() {
                 onChange={handleChange}
                 required
                 InputLabelProps={{
-                  shrink: true,  // Keeps the label inside the text field
-                  required: false,  // Prevents the asterisk (*) from appearing next to the label
+                  shrink: true,  
+                  required: false,  
                 }}
               />
             </Grid>
@@ -90,8 +99,8 @@ function DataEntry() {
                 onChange={handleChange}
                 required
                 InputLabelProps={{
-                  shrink: true,  // Keeps the label inside the text field
-                  required: false,  // Prevents the asterisk (*) from appearing next to the label
+                  shrink: true,  
+                  required: false,  
                 }}
               />
             </Grid>
@@ -105,8 +114,8 @@ function DataEntry() {
                 onChange={handleChange}
                 required
                 InputLabelProps={{
-                  shrink: true,  // Keeps the label inside the text field
-                  required: false,  // Prevents the asterisk (*) from appearing next to the label
+                  shrink: true,  
+                  required: false,  
                 }}
               />
             </Grid>
@@ -120,8 +129,8 @@ function DataEntry() {
                 onChange={handleChange}
                 required
                 InputLabelProps={{
-                  shrink: true,  // Keeps the label inside the text field
-                  required: false,  // Prevents the asterisk (*) from appearing next to the label
+                  shrink: true,  
+                  required: false,  
                 }}
               />
             </Grid>
@@ -129,12 +138,12 @@ function DataEntry() {
               <Button
                 type="submit"
                 variant="contained"
-                color="success"  // Green color for the button
+                color="success"  
                 fullWidth
                 sx={{
-                  backgroundColor: '#4caf50',  // Green button color
+                  backgroundColor: '#4caf50',
                   '&:hover': {
-                    backgroundColor: '#388e3c',  // Darker green on hover
+                    backgroundColor: '#388e3c',
                   },
                 }}
               >

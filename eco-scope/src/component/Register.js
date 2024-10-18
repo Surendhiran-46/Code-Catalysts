@@ -1,8 +1,9 @@
+// Register.js
 import React, { useState } from 'react';
 import { TextField, Button, Box, Typography, RadioGroup, FormControlLabel, Radio, Divider, Alert, IconButton, InputAdornment } from '@mui/material';
-import { Visibility, VisibilityOff } from '@mui/icons-material';  // For show/hide password icons
+import { Visibility, VisibilityOff } from '@mui/icons-material';
 import axios from 'axios';
-import { useNavigate } from 'react-router-dom';  // Assuming you're using react-router for navigation
+import { useNavigate } from 'react-router-dom';
 
 function Register() {
   const [userType, setUserType] = useState(null);
@@ -30,10 +31,9 @@ function Register() {
       ...prevState,
       [name]: value
     }));
-    setErrors({ ...errors, [name]: '' });  // Clear errors on input change
+    setErrors({ ...errors, [name]: '' });
   };
 
-  // Basic validation
   const validateForm = () => {
     let newErrors = {};
     if (!formData.firstName.trim()) newErrors.firstName = 'First name is required';
@@ -41,46 +41,42 @@ function Register() {
     if (!formData.email.trim()) newErrors.email = 'Email is required';
     else if (!/\S+@\S+\.\S+/.test(formData.email)) newErrors.email = 'Email is invalid';
     if (!formData.password.trim()) newErrors.password = 'Password is required';
-    else if (formData.password.length < 6) newErrors.password = 'Password should be at least 6 characters';
+    else if (formData.password.length < 8) newErrors.password = 'Password should be at least 8 characters';
+    else if (!/[A-Z]/.test(formData.password)) newErrors.password = 'Password must contain at least one uppercase letter';
+    else if (!/[a-z]/.test(formData.password)) newErrors.password = 'Password must contain at least one lowercase letter';
+    else if (!/[0-9]/.test(formData.password)) newErrors.password = 'Password must contain at least one number';
+    else if (!/[!@#$%^&*]/.test(formData.password)) newErrors.password = 'Password must contain at least one special character';
     if (formData.password !== formData.confirmPassword) newErrors.confirmPassword = 'Passwords do not match';
     if (userType === 'Company' && !formData.companyName.trim()) newErrors.companyName = 'Company name is required';
     return newErrors;
   };
 
-  // register.js (Updated handleSubmit method)
-const handleSubmit = async () => {
-  const formErrors = validateForm();
-  if (Object.keys(formErrors).length > 0) {
-      setErrors(formErrors);
-      return;
-  }
-  if (userType) {
-      try {
-          const response = await axios.post('http://localhost:5000/api/register', {
-              firstName: formData.firstName,
-              lastName: formData.lastName,
-              email: formData.email,
-              password: formData.password,
-              companyName: formData.companyName,
-          });
-          console.log('Form submitted:', response.data);
-          navigate('/');  // Redirect to the home page
-      } catch (error) {
-          console.error('Error submitting form:', error);
-          setSubmitError('Failed to register.Email already exists');
-      }
-  } else {
-      setSubmitError('Please select a user type.');
-  }
-};
-
-
-  const handleGoogleSignUp = () => {
-    console.log('Google sign up clicked');
-    navigate('/');  // Redirect to the home page after Google sign up
+  const handleSubmit = async () => {
+    const formErrors = validateForm();
+    if (Object.keys(formErrors).length > 0) {
+        setErrors(formErrors);
+        return;
+    }
+    if (userType) {
+        try {
+            const response = await axios.post('http://localhost:5000/api/register', {
+                firstName: formData.firstName,
+                lastName: formData.lastName,
+                email: formData.email,
+                password: formData.password,
+                companyName: formData.companyName,
+            });
+            console.log('Form submitted:', response.data);
+            navigate('/');  // Redirect to the home page
+        } catch (error) {
+            console.error('Error submitting form:', error);
+            setSubmitError('Failed to register. Email already exists or server error.');
+        }
+    } else {
+        setSubmitError('Please select a user type.');
+    }
   };
 
-  // Toggle password visibility
   const togglePasswordVisibility = () => {
     setShowPassword((prevState) => !prevState);
   };
@@ -89,15 +85,19 @@ const handleSubmit = async () => {
     setShowConfirmPassword((prevState) => !prevState);
   };
 
+  // Placeholder for Google Sign Up
+  const handleGoogleSignUp = () => {
+    console.log("Google Sign Up");
+    // Implement Google sign up logic here
+  };
+
   return (
     <Box display="flex" justifyContent="center" alignItems="center" sx={{ minHeight: '100vh' }}>
       <Box sx={{ width: '400px', padding: '20px', borderRadius: '10px', boxShadow: '0 0 10px rgba(0,0,0,0.1)', backgroundColor: '#fff' }}>
         <Typography variant="h4" textAlign="center" mb={2}>Sign Up</Typography>
 
-        {/* Display submit error */}
         {submitError && <Alert severity="error" sx={{ mb: 2 }}>{submitError}</Alert>}
 
-        {/* First Name and Last Name side by side */}
         <Box display="flex" gap={2}>
           <TextField
             label="First Name"
@@ -107,7 +107,7 @@ const handleSubmit = async () => {
             fullWidth
             error={!!errors.firstName}
             helperText={errors.firstName}
-            InputLabelProps={{ shrink: true }}  // Keep label inline
+            InputLabelProps={{ shrink: true }}
           />
           <TextField
             label="Last Name"
@@ -117,11 +117,10 @@ const handleSubmit = async () => {
             fullWidth
             error={!!errors.lastName}
             helperText={errors.lastName}
-            InputLabelProps={{ shrink: true }}  // Keep label inline
+            InputLabelProps={{ shrink: true }}
           />
         </Box>
 
-        {/* Email */}
         <TextField
           label="Email Address"
           name="email"
@@ -131,10 +130,9 @@ const handleSubmit = async () => {
           sx={{ mt: 2 }}
           error={!!errors.email}
           helperText={errors.email}
-          InputLabelProps={{ shrink: true }}  // Keep label inline
+          InputLabelProps={{ shrink: true }}
         />
 
-        {/* Password and Confirm Password with visibility toggle */}
         <TextField
           label="Password"
           name="password"
@@ -154,7 +152,7 @@ const handleSubmit = async () => {
               </InputAdornment>
             )
           }}
-          InputLabelProps={{ shrink: true }}  // Keep label inline
+          InputLabelProps={{ shrink: true }}
         />
         <TextField
           label="Confirm Password"
@@ -175,16 +173,14 @@ const handleSubmit = async () => {
               </InputAdornment>
             )
           }}
-          InputLabelProps={{ shrink: true }}  // Keep label inline
+          InputLabelProps={{ shrink: true }}
         />
 
-        {/* Radio buttons to choose between Company or Individual */}
         <RadioGroup value={userType} onChange={handleUserTypeSelection} sx={{ mt: 2 }}>
           <FormControlLabel value="Individual" control={<Radio />} label="Individual" />
           <FormControlLabel value="Company" control={<Radio />} label="Company" />
         </RadioGroup>
 
-        {/* Company Name input if Company is selected */}
         {userType === 'Company' && (
           <TextField
             label="Company Name"
@@ -195,29 +191,26 @@ const handleSubmit = async () => {
             sx={{ mt: 2 }}
             error={!!errors.companyName}
             helperText={errors.companyName}
-            InputLabelProps={{ shrink: true }}  // Keep label inline
+            InputLabelProps={{ shrink: true }}
           />
         )}
 
-        {/* Submit Button */}
         <Button
           variant="contained"
           onClick={handleSubmit}
           fullWidth
-          sx={{ mt: 3, backgroundColor: 'green', '&:hover': { backgroundColor: 'darkgreen' } }}  // Green color button
+          sx={{ mt: 3, backgroundColor: 'green', '&:hover': { backgroundColor: 'darkgreen' } }}
         >
           Sign Up
         </Button>
 
-        {/* Divider */}
         <Divider sx={{ width: '100%', my: 3 }} />
 
-        {/* Google Sign Up Button */}
         <Button
           variant="outlined"
           onClick={handleGoogleSignUp}
           fullWidth
-          sx={{ color: 'green', borderColor: 'green', '&:hover': { borderColor: 'darkgreen' } }}  // Green outline button
+          sx={{ color: 'green', borderColor: 'green', '&:hover': { borderColor: 'darkgreen' } }}
         >
           Sign Up with Google
         </Button>

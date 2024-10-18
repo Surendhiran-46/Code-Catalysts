@@ -21,4 +21,14 @@ db.run(`CREATE TABLE IF NOT EXISTS users (
     company_name TEXT
 )`);
 
+// Create a new table for storing environmental data
+db.run(`CREATE TABLE IF NOT EXISTS environmental_data (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    project_name TEXT,
+    energy_consumption REAL,
+    carbon_emissions REAL,
+    water_usage REAL,
+    waste_generated REAL
+)`);
+
 module.exports = db;
