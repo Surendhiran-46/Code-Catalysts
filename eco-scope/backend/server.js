@@ -88,3 +88,38 @@ app.post('/api/calculate-co2', (req, res) => {
 app.listen(5000, () => {
   console.log('Server is running on port 5000');
 });
+
+
+// Route to fetch user details
+app.get('/api/user/:id', (req, res) => {
+  const userId = req.params.id;
+
+  const query = `SELECT * FROM users WHERE id = ?`;
+
+  db.get(query, [userId], (err, row) => {
+    if (err) {
+      console.error(err.message);
+      return res.status(500).json({ error: err.message });
+    }
+    if (!row) {
+      return res.status(404).json({ error: 'User not found' });
+    }
+    res.json(row);
+  });
+});
+
+// Route to update user details
+app.put('/api/user/:id', (req, res) => {
+  const userId = req.params.id;
+  const { firstName, lastName, email, companyName } = req.body;
+
+  const query = `UPDATE users SET first_name = ?, last_name = ?, email = ?, company_name = ? WHERE id = ?`;
+
+  db.run(query, [firstName, lastName, email, companyName, userId], function (err) {
+    if (err) {
+      console.error(err.message);
+      return res.status(500).json({ error: err.message });
+    }
+    res.json({ message: 'User details updated successfully!' });
+  });
+});
