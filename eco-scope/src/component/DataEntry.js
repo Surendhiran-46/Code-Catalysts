@@ -785,4 +785,3 @@ function DataEntry() {
 
 export default DataEntry;
 
-
