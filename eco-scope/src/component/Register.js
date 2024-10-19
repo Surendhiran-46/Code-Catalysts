@@ -110,6 +110,7 @@ function Register() {
       <Box
         display="flex"
         sx={{
+          margin : '',
           width: '900px',
           borderRadius: '10px',
           boxShadow: '0 0 10px rgba(0,0,0,0.1)',
@@ -137,6 +138,7 @@ function Register() {
         {/* Right Side - Registration Form */}
         <Box
           sx={{
+
             width: '50%',
             padding: '40px',
             display: 'flex',
