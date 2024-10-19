@@ -52,14 +52,23 @@ function Profile() {
         email: formData.email,
         companyName: formData.companyName,
       });
-      console.log('Form updated:', response.data);
+  
+      // Set the updated user details back to the formData state
+      setFormData({
+        firstName: response.data.firstName,
+        lastName: response.data.lastName,
+        email: response.data.email,
+        companyName: response.data.companyName,
+      });
+  
       setSuccessMessage('User details updated successfully!');
-      setEditMode(false);
+      setEditMode(false); // Exit edit mode
     } catch (error) {
       console.error('Error updating form:', error);
       setSubmitError('Failed to update user details.');
     }
   };
+  
 
   return (
     <Box

@@ -89,6 +89,7 @@ function DataEntry() {
                 label="Project Name"
                 variant="outlined"
                 fullWidth
+                type="text"
                 name="projectName"
                 value={data.projectName}
                 onChange={handleChange}
@@ -107,6 +108,7 @@ function DataEntry() {
                 name="energyConsumption"
                 value={data.energyConsumption}
                 onChange={handleChange}
+                type="number"
                 required
                 InputLabelProps={{
                   shrink: true,
@@ -122,6 +124,7 @@ function DataEntry() {
                 name="carbonEmissions"
                 value={data.carbonEmissions}
                 onChange={handleChange}
+                type="number"
                 required
                 InputLabelProps={{
                   shrink: true,
@@ -137,6 +140,7 @@ function DataEntry() {
                 name="waterUsage"
                 value={data.waterUsage}
                 onChange={handleChange}
+                type="number"
                 required
                 InputLabelProps={{
                   shrink: true,
@@ -152,6 +156,7 @@ function DataEntry() {
                 name="wasteGenerated"
                 value={data.wasteGenerated}
                 onChange={handleChange}
+                type="number"
                 required
                 InputLabelProps={{
                   shrink: true,
