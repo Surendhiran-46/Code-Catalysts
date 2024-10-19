@@ -23,17 +23,17 @@ function Login() {
       setError('Both email and password are required.');
       return;
     }
-
+  
     try {
       const response = await axios.post('http://localhost:5000/api/login', {
         email,
         password
       });
       console.log('Logged in:', response.data);
-
-      // Save the token and update the auth state
-      login(response.data.token);
-
+  
+      // Save the token and user ID in the auth context
+      login(response.data.token, response.data.userId); // Pass userId
+  
       // Redirect to home page or dashboard
       navigate('/Home');
     } catch (error) {
@@ -41,6 +41,7 @@ function Login() {
       setError('Invalid email or password.');
     }
   };
+  
 
   const togglePasswordVisibility = () => {
     setShowPassword(prev => !prev);

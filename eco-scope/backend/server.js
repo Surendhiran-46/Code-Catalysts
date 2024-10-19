@@ -85,6 +85,20 @@ app.post('/api/calculate-co2', (req, res) => {
   res.json(report);
 });
 
+// Route to get user data by ID
+app.get('/api/user/:id', (req, res) => {
+  const query = `SELECT first_name, last_name, email, company_name FROM users WHERE id = ?`;
+  db.get(query, [req.params.id], (err, row) => {
+    if (err) {
+      return res.status(500).json({ error: err.message });
+    }
+    if (!row) {
+      return res.status(404).json({ error: 'User not found' });
+    }
+    res.json(row);
+  });
+});
+
 app.listen(5000, () => {
   console.log('Server is running on port 5000');
 });
