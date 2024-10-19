@@ -1,3 +1,55 @@
 body{
     font-family:Arial, Helvetica, sans-serif !important;
 }
+html {
+    scroll-behavior: smooth;
+  }
+
+/* Navbar Styling */
+.navbar {
+    background: linear-gradient(90deg, #000000, #333333);
+    color: white;
+    padding: 15px 30px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    box-shadow: 0px 4px 10px rgba(0, 255, 0, 0.6);
+    border: 2px solid #006400;
+  }
+
+  .logo-img {
+    height: 40px;
+  }
+
+  .nav-links {
+    display: flex;
+    gap: 20px; /* Spacing between each item */
+    align-items: center; /* Ensure all items are vertically aligned */
+    justify-content: center; /* Center the items horizontally */
+  }
+
+  .nav-links a, .nav-links button {
+    color: #00a676;
+    font-size: 16px;
+    border: none;
+    background: none;
+    cursor: pointer;
+    padding: 10px; /* Add padding for better clickability */
+    display: inline-flex; /* Ensure items are treated as inline elements */
+    align-items: center;
+    justify-content: center;
+  }
+
+  .nav-links a:hover, .nav-links button:hover {
+    color: #fff; /* Optional: Change color on hover */
+  }
+
+  .home {
+    display: flex;
+    flex-direction: column;
+  }
+
+  a {
+    text-decoration: none;
+    color: inherit;
+  }

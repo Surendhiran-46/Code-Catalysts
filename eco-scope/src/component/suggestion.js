@@ -228,65 +228,103 @@
 
 // export default Sugess;
 
-
 import React, { useState } from "react";
 import axios from "axios";
 import jsPDF from "jspdf";
 import leavesImage from "../assests/leaves.jpg"; // Import the image
+import Navbar from "./NavBar";
 
 function Sugess() {
-  const [energyConsumption, setEnergyConsumption] = useState(""); // User input for energy consumption
-  const [waterUsage, setWaterUsage] = useState(""); // User input for water usage
-  const [carbonEmissions, setCarbonEmissions] = useState(""); // User input for carbon emissions
-  const [analysis, setAnalysis] = useState(""); // Store the AI-generated analysis
-  const [loading, setLoading] = useState(false); // To handle loading state
-  const [error, setError] = useState(""); // To handle error state
-  const [fieldError, setFieldError] = useState(""); // To handle field validation error
-  const [fileName, setFileName] = useState(""); // To handle custom file name
-  
+  const [energyConsumption, setEnergyConsumption] = useState("");
+  const [waterUsage, setWaterUsage] = useState("");
+  const [carbonEmissions, setCarbonEmissions] = useState("");
+  const [analysis, setAnalysis] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
+  const [fieldError, setFieldError] = useState("");
+  const [fileName, setFileName] = useState("");
+  const [showModal, setShowModal] = useState(false); // State for modal visibility
+  const [modalMessage, setModalMessage] = useState(""); // Store modal message
+
+  // Define max limits
+  const MAX_ENERGY = 200; // kWh
+  const MAX_WATER = 20000; // liters
+  const MAX_CARBON = 1050; // gCO₂/kWh
+
+  // Function to check max limits and show modal with a message
+  const checkMaxLimit = (value, maxLimit, fieldName) => {
+    if (value > maxLimit) {
+      let suggestion = "";
+
+      // Provide suggestions based on which field is exceeded
+      switch (fieldName) {
+        case "Energy Consumption":
+          suggestion = "Consider using renewable energy sources or improving energy efficiency to lower consumption.";
+          break;
+        case "Water Usage":
+          suggestion = "Look into water-saving techniques or alternative processes that require less water.";
+          break;
+        case "Carbon Emissions":
+          suggestion = "Switch to low-carbon technologies or optimize processes to reduce emissions.";
+          break;
+        default:
+          suggestion = "Please review your inputs and try again.";
+      }
+
+      setModalMessage(`${fieldName} has exceeded the maximum limit. ${suggestion}`);
+      setShowModal(true); // Show modal if limit is exceeded
+      return true;
+    }
+    return false;
+  };
+
   // Async function to make the API request
   async function generateAnalysis() {
-    setLoading(true); // Set loading state to true when API call starts
-    setError(""); // Clear any previous errors
-    setFieldError(""); // Clear field error
+    setLoading(true);
+    setError("");
+    setFieldError("");
 
-    // Check if all fields are filled
     if (!energyConsumption || !waterUsage || !carbonEmissions) {
       setFieldError("Please fill all fields to generate the analysis.");
       setLoading(false);
-      return; // Don't make the API call if any field is empty
+      return;
     }
 
-    // Best and worst-case values for comparison
+    if (
+      checkMaxLimit(energyConsumption, MAX_ENERGY, "Energy Consumption") ||
+      checkMaxLimit(waterUsage, MAX_WATER, "Water Usage") ||
+      checkMaxLimit(carbonEmissions, MAX_CARBON, "Carbon Emissions")
+    ) {
+      setLoading(false);
+      return;
+    }
     const bestCaseEnergy = 0; // Best case: renewable sources with minimal energy consumption
-    const worstCaseEnergy = 200; // Worst case: traditional energy sources (high consumption)
+     const worstCaseEnergy = 200; // Worst case: traditional energy sources (high consumption)
     
     const bestCaseWater = 0; // Best case: waterless process
     const worstCaseWater = 20000; // Worst case: water-intensive processes
     
     const bestCaseCarbon = 0; // Best case: zero emissions (renewable sources)
-    const worstCaseCarbon = 1050; // Worst case: carbon-heavy energy sources
+    const worstCaseCarbon = 1050;
 
-    // Create a detailed query asking for a single analysis that covers all three factors together
     const query = `Analyze the environmental impact based on the input values for Energy Consumption, Water Usage, and Carbon Emissions.
-    Compare the following with the best and worst-case scenarios and provide a unified analysis:
+   Compare the following with the best and worst-case scenarios and provide a unified analysis:
 
-    1. *Energy Consumption: ${energyConsumption} kWh*
-    - Best case scenario: ${bestCaseEnergy} kWh (renewable energy sources).
+    1. Energy Consumption: ${energyConsumption} kWh
+     - Best case scenario: ${bestCaseEnergy} kWh (renewable energy sources).
     - Worst case scenario: ${worstCaseEnergy} kWh (traditional energy sources).
 
-    2. *Water Usage: ${waterUsage} liters*
-    - Best case scenario: ${bestCaseWater} liters (waterless processes).
+     2. Water Usage: ${waterUsage} liters
+     - Best case scenario: ${bestCaseWater} liters (waterless processes).
     - Worst case scenario: ${worstCaseWater} liters (water-intensive processes like beef production).
 
-    3. *Carbon Emissions: ${carbonEmissions} gCO₂/kWh*
-    - Best case scenario: ${bestCaseCarbon} gCO₂/kWh (zero emissions, renewable energy).
-    - Worst case scenario: ${worstCaseCarbon} gCO₂/kWh (high emissions, traditional energy).
+     3. Carbon Emissions: ${carbonEmissions} gCO₂/kWh
+   - Best case scenario: ${bestCaseCarbon} gCO₂/kWh (zero emissions, renewable energy).
+     - Worst case scenario: ${worstCaseCarbon} gCO₂/kWh (high emissions, traditional energy).
 
-    Provide a single analysis that compares these three factors to the best and worst-case scenarios. The analysis should evaluate:
-    - How the current values compare to both extremes (best and worst case).
-    - Whether the current values are closer to the best-case scenario (environmentally friendly) or the worst-case scenario (harmful).`;
-
+     Provide a single analysis that compares these three factors to the best and worst-case scenarios. The analysis should evaluate:
+     - How the current values compare to both extremes (best and worst case).
+     - Whether the current values are closer to the best-case scenario (environmentally friendly) or the worst-case scenario (harmful).`;
 
     try {
       const response = await axios({
@@ -296,51 +334,53 @@ function Sugess() {
           contents: [
             {
               parts: [
-                { text: query }, // Sending the formatted query to the API
+                { text: query },
               ],
             },
           ],
         },
       });
 
-      console.log("API Response: ", response);
-
       if (response.data && response.data.candidates && response.data.candidates.length > 0) {
         const generatedAnalysis = response.data.candidates[0].content.parts[0].text;
-        setAnalysis(generatedAnalysis); // Store the generated analysis in state
+        setAnalysis(generatedAnalysis);
       } else {
         setError("No valid response from the API. Please check your input or the API key.");
       }
     } catch (error) {
-      console.error("Error fetching AI response", error);
-      setError("An error occurred while fetching the response. Please check the network or API key.");
+      setError("An error occurred while fetching the response.");
     } finally {
-      setLoading(false); // Set loading state to false after the API call finishes
+      setLoading(false);
     }
   }
-    const exportToPDF = () => {
-      if (!analysis) {
-        alert("Please generate the analysis before exporting.");
-        return;
-      }
-  
-      const doc = new jsPDF();
-  
-      // Add content to the PDF
-      doc.setFontSize(16);
-      doc.text("Environmental Impact Analysis", 10, 10);
-      doc.setFontSize(12);
-      doc.text(analysis, 10, 20);
-  
-      // If no file name is provided, default to "Environmental_Analysis.pdf"
-      const pdfFileName = fileName ? `${fileName}.pdf` : "Environmental_Analysis.pdf";
-      doc.save(pdfFileName); // Save the PDF with the given or default name
-    };
+
+  const exportToPDF = () => {
+    if (!analysis) {
+      alert("Please generate the analysis before exporting.");
+      return;
+    }
+
+    const doc = new jsPDF();
+
+    // Add content to the PDF
+    doc.setFontSize(16);
+    doc.text("Environmental Impact Analysis", 10, 10);
+    doc.setFontSize(10);
+    const maxWidth = 180; // Adjust this width to fit more text
+    doc.text(analysis, 10, 30, { maxWidth: maxWidth });
+
+    // If no file name is provided, default to "Environmental_Analysis.pdf"
+    const pdfFileName = fileName ? `${fileName}.pdf` : "Environmental_Analysis.pdf";
+    doc.save(pdfFileName); // Save the PDF with the given or default name
+  };
+
+  // Close the modal
+  const closeModal = () => setShowModal(false);
 
   return (
     <div style={styles.wrapper}>
+      <Navbar />
       <div style={styles.container}>
-        <h1>AI Provided Feedback</h1>
         <h1>Environmental Impact Analysis</h1>
 
         <div style={styles.inputContainer}>
@@ -353,7 +393,7 @@ function Sugess() {
             style={styles.input}
             step="any"
             min="0"
-            onWheel={(e) => e.target.blur()} // Remove increment/decrement spinners
+            onWheel={(e) => e.target.blur()}
           />
         </div>
 
@@ -367,7 +407,7 @@ function Sugess() {
             style={styles.input}
             step="any"
             min="0"
-            onWheel={(e) => e.target.blur()} // Remove increment/decrement spinners
+            onWheel={(e) => e.target.blur()}
           />
         </div>
 
@@ -381,13 +421,11 @@ function Sugess() {
             style={styles.input}
             step="any"
             min="0"
-            onWheel={(e) => e.target.blur()} // Remove increment/decrement spinners
+            onWheel={(e) => e.target.blur()}
           />
         </div>
 
         {fieldError && <p style={styles.fieldError}>{fieldError}</p>}
-
-        <br />
 
         <button
           onClick={generateAnalysis}
@@ -407,48 +445,53 @@ function Sugess() {
             </div>
           )}
 
-          <br />
-          {/* Input for file name */}
-        <div style={{margin : '20px 0px'}}>
-          <label>File Name:</label>
-          <input
-            type="text"
-            value={fileName}
-            onChange={(e) => setFileName(e.target.value)}
-            placeholder="Enter custom file name (without .pdf)"
-            style={styles.input}
-            
-          />
-          <br />
-        </div>
+          <div style={{ margin: '20px 0px' }}>
+            <label>File Name:</label>
+            <input
+              type="text"
+              value={fileName}
+              onChange={(e) => setFileName(e.target.value)}
+              placeholder="Enter custom file name (without .pdf)"
+              style={styles.input}
+            />
+          </div>
 
-        {/* Export to PDF button */}
-        <button onClick={exportToPDF} style={styles.button}>
-          Export as PDF
-        </button>
+          <button onClick={exportToPDF} style={styles.button}>
+            Export as PDF
+          </button>
         </div>
       </div>
+
+      {/* Modal for alerts */}
+      {showModal && (
+        <div style={styles.modalOverlay}>
+          <div style={styles.modalContent}>
+            <h2 style={styles.modalTitle}>⚠ Alert</h2>
+            <p style={styles.modalMessage}>{modalMessage}</p>
+            <button onClick={closeModal} style={styles.modalButton}>Close</button>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
 
-// CSS in JS for styling
 const styles = {
   wrapper: {
-    backgroundImage: `url(${leavesImage})`, // Set background image to cover the entire page
-    backgroundSize: 'cover',  // Ensure the image covers the entire viewport
-    backgroundPosition: 'center', // Center the image
-    minHeight: '100vh', // Make sure the background covers the full screen height
+    backgroundImage: `url(${leavesImage})`,
+    backgroundSize: 'cover',
+    backgroundPosition: 'center',
+    minHeight: '100vh',
     padding: '20px',
   },
   container: {
-    marginTop: '20px',
     maxWidth: '800px',
     margin: '0 auto',
+    marginTop:'70px',
     padding: '20px',
-    backgroundColor: 'rgba(255, 255, 255, 0.8)', // Light background to make text readable
+    backgroundColor: 'rgba(255, 255, 255, 0.8)',
     borderRadius: '8px',
-    boxShadow: '0 4px 20px rgba(0, 255, 0, 0.4)', // Neo Green glow
+    boxShadow: '0 4px 20px rgba(0, 255, 0, 0.4)',
   },
   inputContainer: {
     display: 'flex',
@@ -469,12 +512,12 @@ const styles = {
     borderRadius: '4px',
     fontSize: '16px',
     color: '#333',
-    appearance: 'textfield', // Remove arrows on input number field
+    appearance: 'textfield',
   },
   button: {
     width: '100%',
     padding: '12px',
-    backgroundColor: '#28a745', // Default green color
+    backgroundColor: '#28a745',
     color: 'white',
     border: 'none',
     borderRadius: '4px',
@@ -505,6 +548,45 @@ const styles = {
     fontWeight: 'bold',
     textAlign: 'center',
     marginTop: '10px',
+  },
+  modalOverlay: {
+    position: 'fixed',
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
+    zIndex: 999,
+  },
+  modalContent: {
+    backgroundColor: '#fff',
+    padding: '20px',
+    borderRadius: '8px',
+    textAlign: 'center',
+    maxWidth: '400px',
+    width: '100%',
+    boxShadow: '0 4px 20px rgba(0, 0, 0, 0.2)',
+  },
+  modalTitle: {
+    fontSize: '24px',
+    marginBottom: '15px',
+    color: 'red', 
+  },
+  modalMessage: {
+    fontSize: '16px',
+    marginBottom: '15px',
+  },
+  modalButton: {
+    padding: '10px 20px',
+    backgroundColor: 'red',
+    color: 'white',
+    border: 'none',
+    borderRadius: '4px',
+    fontSize: '16px',
+    cursor: 'pointer',
   },
 };
 

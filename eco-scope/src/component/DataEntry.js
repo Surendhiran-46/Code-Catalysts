@@ -386,6 +386,7 @@ import { Bar } from 'react-chartjs-2';  // Import Bar chart
 import { Chart, BarElement, CategoryScale, LinearScale, Title, Tooltip, Legend } from 'chart.js';
 import envidataVideo from '../assests/envidata.mp4';  // Importing video from assets folder
 import './style.css'
+import Navbar from './NavBar';
 
 
 // // Register Chart.js components
@@ -487,11 +488,14 @@ function DataEntry() {
 
 
   return (
+    <>
+    <Navbar />
     <Box
       sx={{
         padding: 4,
         minHeight: '100vh',
         position: 'relative',
+        marginTop : '60px'
       }}
     >
       {/* Video Background */}
@@ -703,7 +707,7 @@ function DataEntry() {
       {/* Display the results in a visually appealing way */}
       {isSubmitted && carbonEstimate && (
         <Box sx={{ maxWidth: '800px', margin: '30px auto', padding: 3 }}>
-          <Typography variant="h5" sx={{ fontWeight: 'bold', marginBottom: 2 }}>
+          <Typography variant="h5" color = "white" sx={{ fontWeight: 'bold', marginBottom: 2,font:'white' }}>
             Environmental Impact Report for {data.projectName}
           </Typography>
 
@@ -780,6 +784,7 @@ function DataEntry() {
         </Box>
       )}
     </Box>
+    </>
   );
 }
 

@@ -6,6 +6,7 @@ import { Box, Typography, Button, Alert, TextField, Avatar, IconButton /*, Dialo
 import PersonIcon from '@mui/icons-material/Person';
 import EditIcon from '@mui/icons-material/Edit';
 import { useNavigate } from 'react-router-dom';
+import Navbar from './NavBar';
 
 function Profile() {
   const { userId } = useContext(AuthContext); // Get the user ID from context
@@ -104,6 +105,8 @@ function Profile() {
   
 
   return (
+    <div>
+      <Navbar />
     <Box
       display="flex"
       justifyContent="center"
@@ -260,6 +263,7 @@ function Profile() {
         </DialogActions>
       </Dialog> */}
     </Box>
+    </div>
   );
 }
 

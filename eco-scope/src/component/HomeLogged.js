@@ -385,22 +385,15 @@
 
 // export default Home;
 import React from "react";
-import { Link } from "react-router-dom"; // Import Link for routing
 import videoSrc from '../assests/environ.mp4';
 import logoSrc from '../assests/ecoscope.png'; // Importing the logo
+import { Link } from "react-router-dom"; // Import Link for routing
 import { Avatar, IconButton } from '@mui/material';
 import './style.css'
 
 
 function Home() {
   // Scroll to the About section when the "ABOUT" link is clicked
-  const scrollToAbout = () => {
-    document.getElementById('about').scrollIntoView({ behavior: 'smooth' });
-  };
-
-  const scrollToHome = () => {
-    window.scrollTo({ top: 0, behavior: 'smooth' });
-  }
 
   return (
     <div className="home">
@@ -423,8 +416,9 @@ function Home() {
           <img src={logoSrc} alt="ecoScope Logo" className="logo-img" /> {/* Logo Image */}
         </div>
         <nav className="nav-links">
-          <button onClick={scrollToHome} className="nav-item">HOME</button> {/* Home link */}
-          <button onClick={scrollToAbout} className="nav-item">ABOUT</button> {/* About button */}
+          <Link to="/Home" className="nav-item">HOME</Link>
+          <Link to="/suggestion" className="nav-item">SUGGESTIONS</Link>
+          <Link to="/data-entry" className="nav-item">DATA ENTRY</Link>
           <IconButton component={Link} to="/profile" sx={{ p: 0 }}>
             <Avatar sx={{ bgcolor: "grey" }}></Avatar> {/* Avatar Icon */}
           </IconButton>

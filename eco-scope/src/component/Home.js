@@ -7,12 +7,6 @@ import './style.css'
 
 function Home() {
   // Scroll to the About section when the "ABOUT" link is clicked
-  const scrollToAbout = () => {
-    document.getElementById('about').scrollIntoView({ behavior: 'smooth' });
-  };
-  const scrollToHome = () => {
-    window.scrollTo({ top: 0, behavior: 'smooth' });
-  }
 
   return (
     <div className="home">
@@ -35,8 +29,7 @@ function Home() {
           <img src={logoSrc} alt="ecoScope Logo" className="logo-img" /> {/* Logo Image */}
         </div>
         <nav className="nav-links">
-          <button onClick={scrollToHome} className="nav-item">HOME</button> {/* Home link */}
-          <button onClick={scrollToAbout} className="nav-item">ABOUT</button> {/* About button */}
+          <Link to="/Home" className="nav-item">HOME</Link>
           <Link to="/login" className="nav-item">LOGIN <FaSignInAlt className="nav-icon" /></Link> {/* Login link */}
           <Link to="/register" className="nav-item">REGISTER <FaUserPlus className="nav-icon" /></Link> {/* Register link */}
         </nav>
