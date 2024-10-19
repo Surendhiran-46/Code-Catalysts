@@ -83,7 +83,7 @@ function Home() {
           <CardContent>
             <Typography variant="h6" sx={{ fontWeight: 'bold', marginBottom: 1 }}>Data Entry</Typography>
             <Typography variant="body2">Enter your organization's environmental data such as energy consumption, carbon emissions, and more.</Typography>
-            <Button variant="contained" color="primary" component={Link} to="/data-entry" sx={{ marginTop: 2 }}>
+            <Button variant="contained" color="primary" component={Link} to="/login" sx={{ marginTop: 2 }}>
               Add Data
             </Button>
           </CardContent>

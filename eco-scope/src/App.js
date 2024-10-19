@@ -1,27 +1,30 @@
+// src/App.js
 import React from 'react';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import Home from './component/Home';
 import Login from './component/Login';
 import Register from './component/Register';
-import DataEntry from './component/DataEntry'; // Import the DataEntry component
+import DataEntry from './component/DataEntry';
+import { AuthProvider } from './context/AuthContext';  // Import the AuthProvider
+import ProtectedRoute from './component/ProtectedRoute'; // Import ProtectedRoute
+import HomeLogged from './component/HomeLogged';
 
 function App() {
   return (
-    <Router>
-      <Routes>
-        {/* Home Route */}
-        <Route path="/" element={<Home />} />
-        
-        {/* Login Route */}
-        <Route path="/login" element={<Login />} />
-        
-        {/* Register Route */}
-        <Route path="/register" element={<Register />} />
-        
-        {/* Data Entry Route */}
-        <Route path="/data-entry" element={<DataEntry />} /> {/* Add the DataEntry route */}
-      </Routes>
-    </Router>
+    <AuthProvider>
+      <Router>
+        <Routes>
+          {/* Public Routes */}
+          <Route path="/" element={<Home />} />
+          <Route path="/login" element={<Login />} />
+          <Route path="/register" element={<Register />} />
+          
+          {/* Protected Routes */}
+          <Route path="/Home" element={<ProtectedRoute element={<HomeLogged />} />} />
+          <Route path="/data-entry" element={<ProtectedRoute element={<DataEntry />} />} /> 
+        </Routes>
+      </Router>
+    </AuthProvider>
   );
 }
 

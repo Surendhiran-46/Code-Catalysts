@@ -1,9 +1,13 @@
 // Register.js
 import React, { useState } from 'react';
-import { TextField, Button, Box, Typography, RadioGroup, FormControlLabel, Radio, Divider, Alert, IconButton, InputAdornment } from '@mui/material';
-import { Visibility, VisibilityOff } from '@mui/icons-material';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
+import { TextField, Button, Box, Typography, RadioGroup, FormControlLabel, Radio, Divider, Alert, IconButton, InputAdornment, Link } from '@mui/material';
+import { Visibility, VisibilityOff } from '@mui/icons-material';
+import GoogleIcon from '@mui/icons-material/Google';
+import AppleIcon from '@mui/icons-material/Apple';
+import leaf from '../assests/leaf.jpg';
+
 
 function Register() {
   const [userType, setUserType] = useState(null);
@@ -67,7 +71,7 @@ function Register() {
                 companyName: formData.companyName,
             });
             console.log('Form submitted:', response.data);
-            navigate('/');  // Redirect to the home page
+            navigate('/Home');  // Redirect to the home page
         } catch (error) {
             console.error('Error submitting form:', error);
             setSubmitError('Failed to register. Email already exists or server error.');
@@ -85,135 +89,203 @@ function Register() {
     setShowConfirmPassword((prevState) => !prevState);
   };
 
-  // Placeholder for Google Sign Up
-  const handleGoogleSignUp = () => {
-    console.log("Google Sign Up");
-    // Implement Google sign up logic here
+  const handleSignInClick = () => {
+    navigate('/login');  // Redirect to the login page
   };
 
+  const handleGoogleSignUp = () => {
+    console.log("Google Sign Up");
+  };
+  const handleAppleSignUp = () => {
+    console.log("Apple Sign Up");
+  }
+
   return (
-    <Box display="flex" justifyContent="center" alignItems="center" sx={{ minHeight: '100vh' }}>
-      <Box sx={{ width: '400px', padding: '20px', borderRadius: '10px', boxShadow: '0 0 10px rgba(0,0,0,0.1)', backgroundColor: '#fff' }}>
-        <Typography variant="h4" textAlign="center" mb={2}>Sign Up</Typography>
-
-        {submitError && <Alert severity="error" sx={{ mb: 2 }}>{submitError}</Alert>}
-
-        <Box display="flex" gap={2}>
-          <TextField
-            label="First Name"
-            name="firstName"
-            value={formData.firstName}
-            onChange={handleInputChange}
-            fullWidth
-            error={!!errors.firstName}
-            helperText={errors.firstName}
-            InputLabelProps={{ shrink: true }}
-          />
-          <TextField
-            label="Last Name"
-            name="lastName"
-            value={formData.lastName}
-            onChange={handleInputChange}
-            fullWidth
-            error={!!errors.lastName}
-            helperText={errors.lastName}
-            InputLabelProps={{ shrink: true }}
+    <Box
+      display="flex"
+      justifyContent="center"
+      alignItems="center"
+      sx={{ minHeight: '100vh', backgroundColor: '#f5f5f5' }}  // Page background styling
+    >
+      <Box
+        display="flex"
+        sx={{
+          width: '900px',
+          borderRadius: '10px',
+          boxShadow: '0 0 10px rgba(0,0,0,0.1)',
+          backgroundColor: '#fff',
+        }}
+      >
+        {/* Left Side - Image */}
+        <Box
+          sx={{
+            width: '50%',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            borderRadius: '10px 0 0 10px',  // Rounds only the left side
+            overflow: 'hidden',
+          }}
+        >
+          <img
+            src={leaf}  // Example image, replace with your own
+            alt="Sign Up Visual"
+            style={{ width: '100%', height: '100%', objectFit: 'cover' }}
           />
         </Box>
 
-        <TextField
-          label="Email Address"
-          name="email"
-          value={formData.email}
-          onChange={handleInputChange}
-          fullWidth
-          sx={{ mt: 2 }}
-          error={!!errors.email}
-          helperText={errors.email}
-          InputLabelProps={{ shrink: true }}
-        />
-
-        <TextField
-          label="Password"
-          name="password"
-          type={showPassword ? 'text' : 'password'}
-          value={formData.password}
-          onChange={handleInputChange}
-          fullWidth
-          sx={{ mt: 2 }}
-          error={!!errors.password}
-          helperText={errors.password}
-          InputProps={{
-            endAdornment: (
-              <InputAdornment position="end">
-                <IconButton onClick={togglePasswordVisibility} edge="end">
-                  {showPassword ? <VisibilityOff /> : <Visibility />}
-                </IconButton>
-              </InputAdornment>
-            )
+        {/* Right Side - Registration Form */}
+        <Box
+          sx={{
+            width: '50%',
+            padding: '40px',
+            display: 'flex',
+            flexDirection: 'column',
+            justifyContent: 'center',
           }}
-          InputLabelProps={{ shrink: true }}
-        />
-        <TextField
-          label="Confirm Password"
-          name="confirmPassword"
-          type={showConfirmPassword ? 'text' : 'password'}
-          value={formData.confirmPassword}
-          onChange={handleInputChange}
-          fullWidth
-          sx={{ mt: 2 }}
-          error={!!errors.confirmPassword}
-          helperText={errors.confirmPassword}
-          InputProps={{
-            endAdornment: (
-              <InputAdornment position="end">
-                <IconButton onClick={toggleConfirmPasswordVisibility} edge="end">
-                  {showConfirmPassword ? <VisibilityOff /> : <Visibility />}
-                </IconButton>
-              </InputAdornment>
-            )
-          }}
-          InputLabelProps={{ shrink: true }}
-        />
+        >
+          <Typography variant="h4" textAlign="left" mb={2}>
+            Get Started Now!
+          </Typography>
 
-        <RadioGroup value={userType} onChange={handleUserTypeSelection} sx={{ mt: 2 }}>
-          <FormControlLabel value="Individual" control={<Radio />} label="Individual" />
-          <FormControlLabel value="Company" control={<Radio />} label="Company" />
-        </RadioGroup>
+          {submitError && <Alert severity="error" sx={{ mb: 2 }}>{submitError}</Alert>}
 
-        {userType === 'Company' && (
+          <Box display="flex" gap={2}>
+            <TextField
+              label="First Name"
+              name="firstName"
+              value={formData.firstName}
+              onChange={handleInputChange}
+              fullWidth
+              error={!!errors.firstName}
+              helperText={errors.firstName}
+              InputLabelProps={{ shrink: true }}
+            />
+            <TextField
+              label="Last Name"
+              name="lastName"
+              value={formData.lastName}
+              onChange={handleInputChange}
+              fullWidth
+              error={!!errors.lastName}
+              helperText={errors.lastName}
+              InputLabelProps={{ shrink: true }}
+            />
+          </Box>
+
           <TextField
-            label="Company Name"
-            name="companyName"
-            value={formData.companyName}
+            label="Email Address"
+            name="email"
+            value={formData.email}
             onChange={handleInputChange}
             fullWidth
             sx={{ mt: 2 }}
-            error={!!errors.companyName}
-            helperText={errors.companyName}
+            error={!!errors.email}
+            helperText={errors.email}
             InputLabelProps={{ shrink: true }}
           />
-        )}
 
-        <Button
-          variant="contained"
-          onClick={handleSubmit}
-          fullWidth
-          sx={{ mt: 3, backgroundColor: 'green', '&:hover': { backgroundColor: 'darkgreen' } }}
-        >
-          Sign Up
-        </Button>
+          <TextField
+            label="Password"
+            name="password"
+            type={showPassword ? 'text' : 'password'}
+            value={formData.password}
+            onChange={handleInputChange}
+            fullWidth
+            sx={{ mt: 2 }}
+            error={!!errors.password}
+            helperText={errors.password}
+            InputProps={{
+              endAdornment: (
+                <InputAdornment position="end">
+                  <IconButton onClick={togglePasswordVisibility} edge="end">
+                    {showPassword ? <VisibilityOff /> : <Visibility />}
+                  </IconButton>
+                </InputAdornment>
+              ),
+            }}
+            InputLabelProps={{ shrink: true }}
+          />
 
-        <Divider sx={{ width: '100%', my: 3 }} />
+          <TextField
+            label="Confirm Password"
+            name="confirmPassword"
+            type={showConfirmPassword ? 'text' : 'password'}
+            value={formData.confirmPassword}
+            onChange={handleInputChange}
+            fullWidth
+            sx={{ mt: 2 }}
+            error={!!errors.confirmPassword}
+            helperText={errors.confirmPassword}
+            InputProps={{
+              endAdornment: (
+                <InputAdornment position="end">
+                  <IconButton onClick={toggleConfirmPasswordVisibility} edge="end">
+                    {showConfirmPassword ? <VisibilityOff /> : <Visibility />}
+                  </IconButton>
+                </InputAdornment>
+              ),
+            }}
+            InputLabelProps={{ shrink: true }}
+          />
 
-        <Button
-          variant="outlined"
-          onClick={handleGoogleSignUp}
-          fullWidth
-          sx={{ color: 'green', borderColor: 'green', '&:hover': { borderColor: 'darkgreen' } }}
-        >
-          Sign Up with Google
-        </Button>
+          <RadioGroup value={userType} onChange={handleUserTypeSelection} sx={{ mt: 2 }}>
+            <FormControlLabel value="Individual" control={<Radio />} label="Individual" />
+            <FormControlLabel value="Company" control={<Radio />} label="Company" />
+          </RadioGroup>
+
+          {userType === 'Company' && (
+            <TextField
+              label="Company Name"
+              name="companyName"
+              value={formData.companyName}
+              onChange={handleInputChange}
+              fullWidth
+              sx={{ mt: 2 }}
+              error={!!errors.companyName}
+              helperText={errors.companyName}
+              InputLabelProps={{ shrink: true }}
+            />
+          )}
+
+          <Button
+            variant="contained"
+            onClick={handleSubmit}
+            fullWidth
+            sx={{ mt: 3, backgroundColor: 'green', '&:hover': { backgroundColor: 'darkgreen' } }}
+            >
+            Sign Up
+          </Button>
+
+          <Divider sx={{ width: '100%', my: 3 }} />
+
+          <Button
+            variant="outlined"
+            startIcon={<GoogleIcon />}
+            onClick={handleGoogleSignUp}
+            fullWidth
+            sx={{ color: 'green', borderColor: 'green', '&:hover': { borderColor: 'darkgreen' } }}
+          >
+            Sign Up with Google
+          </Button>
+          <Button
+            variant="contained"
+            startIcon={<AppleIcon />}
+            onClick={handleAppleSignUp}
+            fullWidth
+            sx={{ mt: 2, backgroundColor: 'black', '&:hover': { backgroundColor: 'gray' } }}
+          >
+            Sign Up with Apple
+          </Button> 
+
+          {/* Sign In link */}
+          <Typography textAlign="center" sx={{ mt: 2 }}>
+            Have an account?{' '}
+            <Link onClick={handleSignInClick} sx={{ cursor: 'pointer', color: 'blue', textDecoration: 'none' }}>
+              Sign in
+            </Link>
+          </Typography>
+        </Box>
       </Box>
     </Box>
   );

@@ -55,20 +55,34 @@ app.post('/api/login', async (req, res) => {
   });
 });
 
-// New Route to handle environmental data submission
-app.post('/api/environmental-data', (req, res) => {
-  const { projectName, energyConsumption, carbonEmissions, waterUsage, wasteGenerated } = req.body;
+// server.js
 
-  const query = `INSERT INTO environmental_data (project_name, energy_consumption, carbon_emissions, water_usage, waste_generated) 
-                 VALUES (?, ?, ?, ?, ?)`;
+app.post('/api/calculate-co2', (req, res) => {
+  const { energyConsumption, carbonEmissions, waterUsage, wasteGenerated } = req.body;
 
-  db.run(query, [projectName, energyConsumption, carbonEmissions, waterUsage, wasteGenerated], function (err) {
-    if (err) {
-      console.error(err.message);
-      return res.status(500).json({ error: err.message });
+  // Perform CO2 Emissions Calculation
+  const co2PerKwh = 0.5; // Example: 0.5 kg CO2e per kWh
+  const co2Estimate = parseFloat(energyConsumption) * co2PerKwh;
+
+  // Example analysis calculations
+  const carKmEquivalent = co2Estimate * 1.6; // Example: 1.6 km per kg CO2e
+  const waterUsageEquivalent = parseFloat(waterUsage) / 20; // 20 liters per shower
+  const wasteRecyclingPotential = (wasteGenerated * 0.3); // Assume 30% recycling potential
+
+  // Response with analysis report
+  const report = {
+    co2Estimate: co2Estimate,
+    carKmEquivalent: carKmEquivalent,
+    waterUsageEquivalent: waterUsageEquivalent,
+    wasteRecyclingPotential: wasteRecyclingPotential,
+    recommendations: {
+      energyEfficiency: `Reducing energy use by 10% can cut CO2 emissions by ${(co2Estimate * 0.1).toFixed(2)} kg.`,
+      wasteManagement: `Implementing recycling could reduce landfill waste by ${wasteRecyclingPotential.toFixed(2)} kg.`,
+      waterConservation: `Using water-efficient systems could save ${((parseFloat(waterUsage) * 0.1)).toFixed(2)} liters per day.`
     }
-    res.json({ message: 'Environmental data stored successfully!', dataId: this.lastID });
-  });
+  };
+
+  res.json(report);
 });
 
 app.listen(5000, () => {
