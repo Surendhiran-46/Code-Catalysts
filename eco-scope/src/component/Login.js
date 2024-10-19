@@ -9,6 +9,8 @@ import VisibilityOff from '@mui/icons-material/VisibilityOff';
 import { useNavigate } from 'react-router-dom';
 import { AuthContext } from '../context/AuthContext'; // Import AuthContext
 import leaf from '../assests/leaf.jpg';
+import './style.css'
+
 function Login() {
   const [showPassword, setShowPassword] = useState(false);
   const [email, setEmail] = useState('');
@@ -58,6 +60,7 @@ function Login() {
           sx={{
             width: '900px',
             borderRadius: '10px',
+            border: '1px solid #ccc',
             boxShadow: '0 0 10px rgba(0,0,0,0.1)',
             backgroundColor: '#fff',
           }}

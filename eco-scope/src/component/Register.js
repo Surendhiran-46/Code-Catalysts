@@ -1,16 +1,19 @@
 // Register.js
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import { TextField, Button, Box, Typography, RadioGroup, FormControlLabel, Radio, Divider, Alert, IconButton, InputAdornment, Link } from '@mui/material';
 import { Visibility, VisibilityOff } from '@mui/icons-material';
 import GoogleIcon from '@mui/icons-material/Google';
 import AppleIcon from '@mui/icons-material/Apple';
+import { AuthContext } from '../context/AuthContext'; // Import AuthContext
 import leaf from '../assests/leaf.jpg';
+import './style.css'
 
 
 function Register() {
   const [userType, setUserType] = useState(null);
+  const { login } = useContext(AuthContext); // Get login function from AuthContext
   const [formData, setFormData] = useState({
     firstName: '',
     lastName: '',
@@ -71,6 +74,8 @@ function Register() {
                 companyName: formData.companyName,
             });
             console.log('Form submitted:', response.data);
+            // Save the token and user ID in the auth context
+            login(response.data.token, response.data.userId); // Pass userId
             navigate('/Home');  // Redirect to the home page
         } catch (error) {
             console.error('Error submitting form:', error);
@@ -110,9 +115,9 @@ function Register() {
       <Box
         display="flex"
         sx={{
-          margin : '',
           width: '900px',
           borderRadius: '10px',
+          border: '1px solid #ccc',
           boxShadow: '0 0 10px rgba(0,0,0,0.1)',
           backgroundColor: '#fff',
         }}

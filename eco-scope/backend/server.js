@@ -57,8 +57,9 @@ app.post('/api/login', async (req, res) => {
 
 // server.js
 
+
 app.post('/api/calculate-co2', (req, res) => {
-  const { energyConsumption, carbonEmissions, waterUsage, wasteGenerated } = req.body;
+  const { projectName, energyConsumption, carbonEmissions, waterUsage, wasteGenerated } = req.body;
 
   // Perform CO2 Emissions Calculation
   const co2PerKwh = 0.5; // Example: 0.5 kg CO2e per kWh
@@ -69,22 +70,35 @@ app.post('/api/calculate-co2', (req, res) => {
   const waterUsageEquivalent = parseFloat(waterUsage) / 20; // 20 liters per shower
   const wasteRecyclingPotential = (wasteGenerated * 0.3); // Assume 30% recycling potential
 
-  // Response with analysis report
-  const report = {
-    co2Estimate: co2Estimate,
-    carKmEquivalent: carKmEquivalent,
-    waterUsageEquivalent: waterUsageEquivalent,
-    wasteRecyclingPotential: wasteRecyclingPotential,
-    recommendations: {
-      energyEfficiency: `Reducing energy use by 10% can cut CO2 emissions by ${(co2Estimate * 0.1).toFixed(2)} kg.`,
-      wasteManagement: `Implementing recycling could reduce landfill waste by ${wasteRecyclingPotential.toFixed(2)} kg.`,
-      waterConservation: `Using water-efficient systems could save ${((parseFloat(waterUsage) * 0.1)).toFixed(2)} liters per day.`
+  // Insert data into the database
+  const query = `
+    INSERT INTO environmental_data (project_name, energy_consumption, carbon_emissions, water_usage, waste_generated)
+    VALUES (?, ?, ?, ?, ?)
+  `;
+
+  db.run(query, [projectName, energyConsumption, carbonEmissions, waterUsage, wasteGenerated], function (err) {
+    if (err) {
+      console.error("Error storing environmental data:", err);
+      return res.status(500).json({ error: 'Failed to store environmental data' });
     }
-  };
 
-  res.json(report);
+    // If successful, create the analysis report
+    const report = {
+      co2Estimate: co2Estimate,
+      carKmEquivalent: carKmEquivalent,
+      waterUsageEquivalent: waterUsageEquivalent,
+      wasteRecyclingPotential: wasteRecyclingPotential,
+      recommendations: {
+        energyEfficiency: `Reducing energy use by 10% can cut CO2 emissions by ${(co2Estimate * 0.1).toFixed(2)} kg.`,
+        wasteManagement: `Implementing recycling could reduce landfill waste by ${wasteRecyclingPotential.toFixed(2)} kg.`,
+        waterConservation: `Using water-efficient systems could save ${((parseFloat(waterUsage) * 0.1)).toFixed(2)} liters per day.`
+      }
+    };
+
+    // Send back the response with the report
+    res.json(report);
+  });
 });
-
 // Route to get user data by ID
 app.get('/api/user/:id', (req, res) => {
   const query = `SELECT first_name, last_name, email, company_name FROM users WHERE id = ?`;
@@ -98,12 +112,6 @@ app.get('/api/user/:id', (req, res) => {
     res.json(row);
   });
 });
-
-app.listen(5000, () => {
-  console.log('Server is running on port 5000');
-});
-
-
 // Route to fetch user details
 app.get('/api/user/:id', (req, res) => {
   const userId = req.params.id;
@@ -121,7 +129,6 @@ app.get('/api/user/:id', (req, res) => {
     res.json(row);
   });
 });
-
 // Route to update user details
 app.put('/api/user/:id', (req, res) => {
   const userId = req.params.id;
@@ -145,4 +152,11 @@ app.put('/api/user/:id', (req, res) => {
     });
   });
 });
+
+app.listen(5000, () => {
+  console.log('Server is running on port 5000');
+});
+
+
+
 
