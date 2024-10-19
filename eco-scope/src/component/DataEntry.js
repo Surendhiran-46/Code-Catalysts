@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
-import { Box, Typography, TextField, Button, Grid, Paper, Alert } from '@mui/material';
-import forestsImage from '../assests/forests.jpg';  // Importing image from assets folder
+import { Box, Typography, TextField, Button, Grid, Paper, Alert, Card, CardContent } from '@mui/material';
+import { FaWater, FaBolt, FaRecycle, FaTree } from 'react-icons/fa';
 import axios from 'axios';
+import envidataVideo from '../assests/envidata.mp4';  // Importing video from assets folder
 
 function DataEntry() {
   const [data, setData] = useState({
@@ -50,22 +51,48 @@ function DataEntry() {
       sx={{
         padding: 4,
         minHeight: '100vh',
-        backgroundColor: '#f5f5f5',
-        backgroundImage: `url(${forestsImage})`,
-        backgroundSize: 'cover',
-        backgroundPosition: 'center',
+        position: 'relative',
       }}
     >
+      {/* Video Background */}
+      <video
+        autoPlay
+        loop
+        muted
+        style={{
+          position: 'absolute',
+          top: 0,
+          left: 0,
+          width: '100%',
+          height: '100%',
+          objectFit: 'cover',
+          zIndex: -1,
+        }}
+      >
+        <source src={envidataVideo} type="video/mp4" />
+      </video>
+
       <Paper
         sx={{
           padding: 4,
           maxWidth: '600px',
           margin: '0 auto',
-          backgroundColor: '#ffffff',
-          boxShadow: 3,
+          backgroundColor: '#f9f9f9',  // Light gray background
+          borderRadius: 3,  // Rounded corners
+          boxShadow: 6,  // Deeper shadow
+          zIndex: 1,
         }}
       >
-        <Typography variant="h3" gutterBottom sx={{ fontWeight: 'bold', color: 'black', marginBottom: 4 }}>
+        <Typography
+          variant="h3"
+          gutterBottom
+          sx={{
+            fontWeight: 'bold',
+            color: 'black',
+            marginBottom: 4,
+            textAlign: 'center',  // Centered title
+          }}
+        >
           Environmental Data
         </Typography>
 
@@ -73,9 +100,6 @@ function DataEntry() {
         {isSubmitted && carbonEstimate && (
           <Alert severity="success" sx={{ mb: 4 }}>
             Data Submitted Successfully!
-            <Typography variant="body1" sx={{ mt: 2 }}>
-              Project: {data.projectName} has an estimated CO2 emission of {carbonEstimate.co2e} kg CO2e based on the data provided.
-            </Typography>
           </Alert>
         )}
 
@@ -93,6 +117,12 @@ function DataEntry() {
                 value={data.projectName}
                 onChange={handleChange}
                 required
+                sx={{
+                  borderRadius: 2,  // Rounded TextField corners
+                  '& .MuiInputBase-root': {
+                    padding: '10px',  // Increased padding inside input fields
+                  }
+                }}
                 InputLabelProps={{
                   shrink: true,
                   required: false,
@@ -108,6 +138,12 @@ function DataEntry() {
                 value={data.energyConsumption}
                 onChange={handleChange}
                 required
+                sx={{
+                  borderRadius: 2,
+                  '& .MuiInputBase-root': {
+                    padding: '10px',
+                  }
+                }}
                 InputLabelProps={{
                   shrink: true,
                   required: false,
@@ -123,6 +159,12 @@ function DataEntry() {
                 value={data.carbonEmissions}
                 onChange={handleChange}
                 required
+                sx={{
+                  borderRadius: 2,
+                  '& .MuiInputBase-root': {
+                    padding: '10px',
+                  }
+                }}
                 InputLabelProps={{
                   shrink: true,
                   required: false,
@@ -138,6 +180,12 @@ function DataEntry() {
                 value={data.waterUsage}
                 onChange={handleChange}
                 required
+                sx={{
+                  borderRadius: 2,
+                  '& .MuiInputBase-root': {
+                    padding: '10px',
+                  }
+                }}
                 InputLabelProps={{
                   shrink: true,
                   required: false,
@@ -153,6 +201,12 @@ function DataEntry() {
                 value={data.wasteGenerated}
                 onChange={handleChange}
                 required
+                sx={{
+                  borderRadius: 2,
+                  '& .MuiInputBase-root': {
+                    padding: '10px',
+                  }
+                }}
                 InputLabelProps={{
                   shrink: true,
                   required: false,
@@ -170,6 +224,9 @@ function DataEntry() {
                   '&:hover': {
                     backgroundColor: '#388e3c',
                   },
+                  borderRadius: 2,  // Rounded corners for button
+                  padding: '12px',  // Increased padding for the button
+                  fontWeight: 'bold',
                 }}
               >
                 Submit Data
@@ -178,45 +235,78 @@ function DataEntry() {
           </Grid>
         </form>
       </Paper>
+
+      {/* Display the results in a visually appealing way */}
       {isSubmitted && carbonEstimate && (
-  <Alert severity="success" sx={{ mb: 4 }}>
-    Data Submitted Successfully!
-    <Typography variant="h5" sx={{ mt: 2 }}>
-      Environmental Impact Report for {data.projectName}
-    </Typography>
-    <Typography variant="body1" sx={{ mt: 2 }}>
-      Energy Consumption: {data.energyConsumption} kWh
-      <br />
-      Carbon Emissions: {carbonEstimate.co2Estimate} kg CO2
-      <br />
-      Water Usage: {data.waterUsage} liters (Equivalent to {carbonEstimate.waterUsageEquivalent} showers)
-      <br />
-      Waste Generated: {data.wasteGenerated} kg
-      <br />
-    </Typography>
-    <Typography variant="h6" sx={{ mt: 2 }}>CO2 Emissions Analysis:</Typography>
-    <Typography variant="body1">
-      Your energy consumption results in an estimated {carbonEstimate.co2Estimate} kg of CO2 emissions,
-      which is equivalent to driving {carbonEstimate.carKmEquivalent} km.
-      <br />
-      {carbonEstimate.recommendations.energyEfficiency}
-    </Typography>
-    <Typography variant="h6" sx={{ mt: 2 }}>Water Usage Impact:</Typography>
-    <Typography variant="body1">
-      Your project used {data.waterUsage} liters of water, equivalent to {carbonEstimate.waterUsageEquivalent} showers.
-      <br />
-      {carbonEstimate.recommendations.waterConservation}
-    </Typography>
-    <Typography variant="h6" sx={{ mt: 2 }}>Waste Generation:</Typography>
-    <Typography variant="body1">
-      Your project generated {data.wasteGenerated} kg of waste, {carbonEstimate.wasteRecyclingPotential} kg of which can be recycled.
-      <br />
-      {carbonEstimate.recommendations.wasteManagement}
-    </Typography>
-  </Alert>
-)}
+        <Box sx={{ maxWidth: '800px', margin: '30px auto', padding: 3 }}>
+          <Typography variant="h5" sx={{ fontWeight: 'bold', marginBottom: 2 }}>
+            Environmental Impact Report for {data.projectName}
+          </Typography>
+
+          <Card sx={{ marginBottom: 3 }}>
+            <CardContent>
+              <Typography variant="h6" sx={{ fontWeight: 'bold', color: '#4caf50' }}>
+                <FaBolt /> Energy Consumption
+              </Typography>
+              <Typography variant="body1">
+                Your project consumed {data.energyConsumption} kWh of energy, which is equivalent to{' '}
+                {carbonEstimate.co2Estimate} kg of CO2 emissions.
+              </Typography>
+              <Typography variant="body2" sx={{ color: 'gray', marginTop: 1 }}>
+                {carbonEstimate.recommendations.energyEfficiency}
+              </Typography>
+            </CardContent>
+          </Card>
+
+          <Card sx={{ marginBottom: 3 }}>
+            <CardContent>
+              <Typography variant="h6" sx={{ fontWeight: 'bold', color: '#2196f3' }}>
+                <FaWater /> Water Usage
+              </Typography>
+              <Typography variant="body1">
+                Your project used {data.waterUsage} liters of water, which is equivalent to{' '}
+                {carbonEstimate.waterUsageEquivalent} showers.
+              </Typography>
+              <Typography variant="body2" sx={{ color: 'gray', marginTop: 1 }}>
+                {carbonEstimate.recommendations.waterConservation}
+              </Typography>
+            </CardContent>
+          </Card>
+
+          <Card sx={{ marginBottom: 3 }}>
+            <CardContent>
+              <Typography variant="h6" sx={{ fontWeight: 'bold', color: '#ff9800' }}>
+                <FaRecycle /> Waste Generated
+              </Typography>
+              <Typography variant="body1">
+                Your project generated {data.wasteGenerated} kg of waste, of which{' '}
+                {carbonEstimate.wasteRecyclingPotential} kg can be recycled.
+              </Typography>
+              <Typography variant="body2" sx={{ color: 'gray', marginTop: 1 }}>
+                {carbonEstimate.recommendations.wasteManagement}
+              </Typography>
+            </CardContent>
+          </Card>
+
+          <Card>
+            <CardContent>
+              <Typography variant="h6" sx={{ fontWeight: 'bold', color: '#4caf50' }}>
+                <FaTree /> CO2 Emissions Analysis
+              </Typography>
+              <Typography variant="body1">
+                Your project’s energy consumption results in {carbonEstimate.co2Estimate} kg of CO2 emissions,
+                which is equivalent to driving {carbonEstimate.carKmEquivalent} km.
+              </Typography>
+              <Typography variant="body2" sx={{ color: 'gray', marginTop: 1 }}>
+                {carbonEstimate.recommendations.co2Reduction}
+              </Typography>
+            </CardContent>
+          </Card>
+        </Box>
+      )}
     </Box>
   );
 }
 
 export default DataEntry;
+
