@@ -1,3 +1,4 @@
+
 // import React from "react";
 // import { Link } from "react-router-dom"; // Import Link for routing
 // import videoSrc from '../assests/environ.mp4';
@@ -44,7 +45,9 @@
 //         </div>
 //       </section>
 
-//       {/* About Section: Goals */}
+      
+
+//       {/* About Section */}
 //       <section id="about" className="about">
 //         <h2>Services</h2>
 //         <div className="goal-boxes">
@@ -59,6 +62,24 @@
 //           <div className="goal-box">
 //             <h3>Suggestions</h3>
 //             <p>Get personalized recommendations for improvement.</p>
+//           </div>
+//         </div>
+//       </section>
+//       {/* What Do People Think About Us Section */}
+//       <section id="testimonials" className="testimonials">
+//         <h2>What Do People Think About Us?</h2>
+//         <div className="testimonial-cards">
+//           <div className="testimonial-card">
+//             <p>"EcoScope has revolutionized how our company tracks its carbon footprint. It's incredibly easy to use!"</p>
+//             <h4>- John Doe, CEO of GreenTech</h4>
+//           </div>
+//           <div className="testimonial-card">
+//             <p>"The data visualization tools are phenomenal. Our sustainability reports are clearer than ever before."</p>
+//             <h4>- Jane Smith, Sustainability Officer at EcoWorld</h4>
+//           </div>
+//           <div className="testimonial-card">
+//             <p>"Thanks to EcoScope, we've identified key areas where we can improve our environmental impact."</p>
+//             <h4>- Mark Brown, Operations Manager at EarthCo</h4>
 //           </div>
 //         </div>
 //       </section>
@@ -220,6 +241,50 @@
 //             box-shadow: 0 0 20px rgba(255, 255, 0, 0.9);
 //           }
 
+//           /* Testimonials Section */
+//           .testimonials {
+//             padding: 60px 30px;
+//             text-align: center;
+//             background-color: #006400;
+//             color: white;
+//           }
+
+//           .testimonials h2 {
+//             font-size: 36px;
+//             margin-bottom: 30px;
+//             text-transform: uppercase;
+//             letter-spacing: 2px;
+//           }
+
+//           .testimonial-cards {
+//             display: flex;
+//             gap: 20px;
+//             justify-content: center;
+//             flex-wrap: wrap;
+//           }
+
+//           .testimonial-card {
+//             background-color: #fff;
+//             color: #333;
+//             padding: 30px;
+//             width: 30%;
+//             border-radius: 10px;
+//             box-shadow: 0 4px 10px rgba(0, 166, 118, 0.4);
+//           }
+
+//           .testimonial-card h4 {
+//             margin-top: 20px;
+//             font-size: 20px;
+//             font-weight: bold;
+//             color: #006400;
+//           }
+
+//           .testimonial-card p {
+//             font-size: 16px;
+//             line-height: 1.6;
+//             font-style: italic;
+//           }
+
 //           /* About Section Styling */
 //           .about {
 //             padding: 70px 30px;
@@ -359,8 +424,6 @@ function Home() {
         </div>
       </section>
 
-      
-
       {/* About Section */}
       <section id="about" className="about">
         <h2>Services</h2>
@@ -373,13 +436,14 @@ function Home() {
             <h3>Flowchart</h3>
             <p>Visualize processes and their environmental impact.</p>
           </div>
-          <div className="goal-box">
+          <Link to="/suggestion" className="goal-box"> {/* Link to Suggestions Page */}
             <h3>Suggestions</h3>
             <p>Get personalized recommendations for improvement.</p>
-          </div>
+          </Link>
         </div>
       </section>
-      {/* What Do People Think About Us Section */}
+
+      {/* Testimonials Section */}
       <section id="testimonials" className="testimonials">
         <h2>What Do People Think About Us?</h2>
         <div className="testimonial-cards">
@@ -581,22 +645,40 @@ function Home() {
             background-color: #fff;
             color: #333;
             padding: 30px;
-            width: 30%;
-            border-radius: 10px;
-            box-shadow: 0 4px 10px rgba(0, 166, 118, 0.4);
+            width: 280px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+            text-align: center;
           }
 
           .testimonial-card h4 {
+            font-size: 18px;
+            color: #00a676;
             margin-top: 20px;
-            font-size: 20px;
-            font-weight: bold;
+          }
+
+          /* Contact Section */
+          .contact {
+            padding: 60px 30px;
+            text-align: center;
+            background-color: #f1f1f1;
+          }
+
+          .contact h2 {
+            font-size: 36px;
+            margin-bottom: 20px;
+          }
+
+          .contact-details {
+            margin-top: 20px;
+          }
+
+          .contact-details a {
             color: #006400;
           }
 
-          .testimonial-card p {
-            font-size: 16px;
-            line-height: 1.6;
-            font-style: italic;
+          .contact-details a:hover {
+            text-decoration: underline;
           }
 
           /* About Section Styling */
@@ -637,54 +719,21 @@ function Home() {
 
           .goal-box:hover {
             transform: scale(1.05);
-            box-shadow: 0 0 20px rgba(0, 166, 118, 0.6);
+            box-shadow: 0 0 20px rgba(0, 166, 118, 0.8);
           }
 
           .goal-box h3 {
             font-size: 24px;
-            color: #00a676;
+            color: #006400;
             margin-bottom: 15px;
             font-weight: bold;
-            text-transform: uppercase;
-            letter-spacing: 1px;
           }
 
           .goal-box p {
             font-size: 16px;
-            color: #333;
-            line-height: 1.6;
-            font-style: italic;
+            color: #555;
           }
 
-          /* Contact Section Styling */
-          .contact {
-            background: #333333;
-            color: white;
-            padding: 60px 30px;
-            text-align: center;
-          }
-
-          .contact h2 {
-            font-size: 36px;
-            margin-bottom: 20px;
-            color: #00a676;
-            text-transform: uppercase;
-            letter-spacing: 2px;
-          }
-
-          .contact-details p {
-            font-size: 18px;
-            line-height: 1.6;
-          }
-
-          .contact-details a {
-            color: #00a676;
-            text-decoration: none;
-          }
-
-          .contact-details a:hover {
-            text-decoration: underline;
-          }
         `}
       </style>
     </div>
@@ -692,3 +741,4 @@ function Home() {
 }
 
 export default Home;
+
