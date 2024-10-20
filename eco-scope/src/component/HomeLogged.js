@@ -442,15 +442,12 @@ function Home() {
       {/* About Section */}
       <section id="about" className="about">
         <h2>Services</h2>
-        <div className="goal-boxes">
+        <div className="goal-boxes"  style={{ display: 'flex',paddingLeft:'15%',paddingRight:'15%' }}>
+
           <Link to="/data-entry" className="goal-box"> {/* Link to Data Entry Page */}
             <h3>Data Entry</h3>
             <p>Track and input data for sustainability metrics.</p>
           </Link>
-          <div className="goal-box">
-            <h3>Flowchart</h3>
-            <p>Visualize processes and their environmental impact.</p>
-          </div>
           <Link to="/suggestion" className="goal-box"> {/* Link to Suggestions Page */}
             <h3>Suggestions</h3>
             <p>Get personalized recommendations for improvement.</p>

@@ -247,8 +247,8 @@ function Sugess() {
   const [modalMessage, setModalMessage] = useState(""); // Store modal message
 
   // Define max limits
-  const MAX_ENERGY = 200; // kWh
-  const MAX_WATER = 20000; // liters
+  const MAX_ENERGY = 65001; // kWh
+  const MAX_WATER = 70000; // liters
   const MAX_CARBON = 1050; // gCO₂/kWh
 
   // Function to check max limits and show modal with a message
@@ -298,33 +298,40 @@ function Sugess() {
       setLoading(false);
       return;
     }
-    const bestCaseEnergy = 0; // Best case: renewable sources with minimal energy consumption
-     const worstCaseEnergy = 200; // Worst case: traditional energy sources (high consumption)
-    
-    const bestCaseWater = 0; // Best case: waterless process
-    const worstCaseWater = 20000; // Worst case: water-intensive processes
-    
-    const bestCaseCarbon = 0; // Best case: zero emissions (renewable sources)
+    //kWh
+    const bestCaseEnergy = 10; // Best case: renewable sources with minimal energy consumption
+    const AverageCaseEnergy = 30000; // Best case: renewable sources with minimal energy consumptio
+     const worstCaseEnergy = 65001; // Worst case: traditional energy sources (high consumption)
+    //Litres
+    const bestCaseWater = 2; // Best case: waterless process
+    const AverageCaseWater = 77.7; // Best case: waterless process
+    const worstCaseWater = 70000; // Worst case: water-intensive processes
+    //gCO2/kWh
+    const bestCaseCarbon = 50; // Best case: zero emissions (renewable sources)
+    const AverageCaseCarbon = 475; // Best case: zero emissions (renewable sources)
     const worstCaseCarbon = 1050;
 
     const query = `Analyze the environmental impact based on the input values for Energy Consumption, Water Usage, and Carbon Emissions.
-   Compare the following with the best and worst-case scenarios and provide a unified analysis:
+   Compare the following with the best,average and worst-case scenarios and provide a unified analysis:
 
     1. Energy Consumption: ${energyConsumption} kWh
      - Best case scenario: ${bestCaseEnergy} kWh (renewable energy sources).
+     - Average case scenario: ${AverageCaseEnergy} kWh (renewable energy sources).
     - Worst case scenario: ${worstCaseEnergy} kWh (traditional energy sources).
 
      2. Water Usage: ${waterUsage} liters
      - Best case scenario: ${bestCaseWater} liters (waterless processes).
+    - Average case scenario: ${AverageCaseWater} liters (waterless processes).
     - Worst case scenario: ${worstCaseWater} liters (water-intensive processes like beef production).
 
      3. Carbon Emissions: ${carbonEmissions} gCO₂/kWh
    - Best case scenario: ${bestCaseCarbon} gCO₂/kWh (zero emissions, renewable energy).
+   - Average case scenario: ${AverageCaseCarbon} gCO₂/kWh (zero emissions, renewable energy).
      - Worst case scenario: ${worstCaseCarbon} gCO₂/kWh (high emissions, traditional energy).
 
      Provide a single analysis that compares these three factors to the best and worst-case scenarios. The analysis should evaluate:
-     - How the current values compare to both extremes (best and worst case).
-     - Whether the current values are closer to the best-case scenario (environmentally friendly) or the worst-case scenario (harmful).`;
+     - How the current values compare to both extremes (best,average and worst case).
+     - Whether the current values are closer to the best-case scenario (environmentally friendly),average-case scenario or the worst-case scenario (harmful).`;
 
     try {
       const response = await axios({

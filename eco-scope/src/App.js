@@ -54,8 +54,8 @@ function App() {
 
           {/* Protected Routes */}
           <Route path="/home" element={<ProtectedRoute element={<HomeLogged />} />} />
-          <Route path="/data-entry" element={<ProtectedRoute element={<DataEntry />} />} />
           <Route path="/profile" element={<ProtectedRoute element={<Profile />} />} />
+          <Route path="/data-entry" element={<ProtectedRoute element={<DataEntry />} />} />
           
           {/* Sugess Component Route */}
           <Route path="/suggestion" element={<ProtectedRoute element={<Sugess />} />} /> {/* Added Sugess component route */}
