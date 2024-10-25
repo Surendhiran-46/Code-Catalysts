@@ -438,25 +438,22 @@ function DataEntry() {
   
   // Data for Bar Chart
   const chartData = {
-    labels: ['Energy Consumption (kWh)', 'Carbon Emissions (kg CO2)', 'Water Usage (liters)', 'Waste Generated (kg)'],
+    labels: ['Energy Consumption (kWh)', 'Water Usage (liters)', 'Waste Generated (kg)'],
     datasets: [
       {
         label: 'Environmental Impact' ,
         data: [
           data.energyConsumption || 0,
-          data.carbonEmissions || 0,
           data.waterUsage || 0,
           data.wasteGenerated || 0,
         ],
         backgroundColor: [
           'rgba(75, 192, 192, 0.2)',
-          'rgba(153, 102, 255, 0.2)',
           'rgba(255, 159, 64, 0.2)',
           'rgba(255, 99, 132, 0.2)',
         ],
         borderColor: [
           'rgba(75, 192, 192, 1)',
-          'rgba(153, 102, 255, 1)',
           'rgba(255, 159, 64, 1)',
           'rgba(255, 99, 132, 1)',
         ],
@@ -614,7 +611,7 @@ function DataEntry() {
               />
             </Grid>
             <Grid item xs={12}>
-              <TextField
+              {/* <TextField
                 label="Carbon Emissions (kg CO2)"
                 variant="outlined"
                 fullWidth
@@ -633,7 +630,7 @@ function DataEntry() {
                   shrink: true,
                   required: false,
                 }}
-              />
+              /> */}
             </Grid>
             <Grid item xs={12}>
               <TextField
@@ -775,7 +772,7 @@ function DataEntry() {
               <CardContent>
                 <Typography variant="h5" gutterBottom>CO2 Estimate</Typography>
                 <Typography variant="body1">Carbon Dioxide Estimate: {carbonEstimate.co2Estimate} kg CO2</Typography>
-                <Typography variant="body1">Your data shows a total energy consumption of {data.energyConsumption} kWh, carbon emissions of {data.carbonEmissions} kg CO2, water usage of {data.waterUsage} liters, and waste generated at {data.wasteGenerated} kg.</Typography>
+                <Typography variant="body1">Your data shows a total energy consumption of {data.energyConsumption} kWh, water usage of {data.waterUsage} liters, and waste generated at {data.wasteGenerated} kg.</Typography>
               </CardContent>
             </Card>
             {/* Bar Chart to represent environmental data */}
